@@ -1,5 +1,7 @@
 package com.manoelcampos.retornoboleto;
 
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -25,15 +27,17 @@ public interface LeituraRetorno {
 
     static LeituraRetorno newInstance(String caminhoArquivo) {
 
-        if (caminhoArquivo.contains("banco-brasil")) {
-            return new LeituraRetornoBancoBrasil();
-        }//if
-        if (caminhoArquivo.contains("bradesco")) {
-            return new LeituraRetornoBradesco();
-        }//if
+        String sufixoNomeBanco = new File(caminhoArquivo).getName().split("\\.")[0];
 
-        throw new UnsupportedOperationException(
-                "Banco não Suportado"+caminhoArquivo);
+        try {
+            String interfaceName = LeituraRetorno.class.getName();
+            Class<?> aClass = Class.forName(interfaceName + sufixoNomeBanco);
+           return  (LeituraRetorno) aClass.getDeclaredConstructor().newInstance();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Banco não suportado "+e);
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
