@@ -11,11 +11,18 @@ import java.net.URISyntaxException;
 public class Principal {
     public static void main(String[] args) throws URISyntaxException {
 
-        URI caminhoArquivo = Principal.class.getResource("BancoBrasil.csv").toURI();
+        URI caminhoArquivoBancoBrasil = Principal.class.getResource("BancoBrasil.csv").toURI();
         final var processador = new ProcessadorBoletos();
 
-        System.out.println("Lendo arquivo " + caminhoArquivo + "\n");
+        System.out.println("Lendo arquivo " + caminhoArquivoBancoBrasil + "\n");
 
-        processador.processar(caminhoArquivo);
+        processador.processar(caminhoArquivoBancoBrasil);
+
+        URI caminhoArquivoBradesco = Principal.class.getResource("Bradesco.csv").toURI();
+
+        System.out.println("\n Lendo arquivo " + caminhoArquivoBancoBrasil + "\n");
+
+        processador.processar(caminhoArquivoBradesco);
+
     }
 }
